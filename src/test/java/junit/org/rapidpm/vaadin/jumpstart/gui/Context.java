@@ -44,37 +44,13 @@ public interface Context {
                 Supplier<Boolean>,
                 Supplier<String>>>> streamOfConfig = () ->
         Stream.of(
-            //            nextQuad(browserFireFox, platformMAC, runningLocalBrowser, localHost),
-            //            nextQuad(browserSafarie, platformMAC, runningLocalBrowser, localHost),
-            //            nextQuad(browserFireFox, platformLinux, runningLocalBrowser, localHost),
-            //            nextQuad(browserSafarie, platformLinux, runningLocalBrowser, localHost),
-            //            nextQuad(browserPhantomJS, platformLinux, runningSeleniumHub, seleniumHubLocal)
-
             //running - without Vaadin Selenium Hub
             nextQuad(browserChrome, platformMAC, runningLocalBrowser, localHost),
-            nextQuad(browserPhantomJS, platformMAC, runningLocalBrowser, localHost),
-//
+//            nextQuad(browserPhantomJS, platformMAC, runningLocalBrowser, localHost),
 //            nextQuad(browserChrome, platformLinux, runningLocalBrowser, localHost),
 //            nextQuad(browserPhantomJS, platformLinux, runningLocalBrowser, localHost),
-//
             nextQuad(browserChrome, platformLinux, runningSeleniumHub, seleniumHubLocal),
             nextQuad(browserFireFox, platformLinux, runningSeleniumHub, seleniumHubLocal)
-
-
-            // running inside Vaadin Selenium Hub
-//            nextQuad(browserChrome, platformLinux, runningSeleniumHub, seleniumHubVaadin),
-//            nextQuad(browserFireFox, platformLinux, runningSeleniumHub, seleniumHubVaadin),
-//            nextQuad(browserPhantomJS, platformLinux, runningSeleniumHub, seleniumHubVaadin),
-
-//            nextQuad(browserChrome, platformWindows, runningSeleniumHub, seleniumHubVaadin), // exception
-//            nextQuad(browserFireFox, platformWindows, runningSeleniumHub, seleniumHubVaadin), // exception
-//            nextQuad(browserPhantomJS, platformWindows, runningSeleniumHub, seleniumHubVaadin)
-
-
-
-            //            nextQuad(browserChrome, platformWindows, runningSeleniumHub, seleniumHubVaadin),// exception test002
-            //            nextQuad(browserFireFox, platformWindows, runningSeleniumHub, seleniumHubVaadin), // exception
-            //            nextQuad(browserPhantomJS, platformWindows, runningSeleniumHub, seleniumHubVaadin)// exception
         );
 }
 

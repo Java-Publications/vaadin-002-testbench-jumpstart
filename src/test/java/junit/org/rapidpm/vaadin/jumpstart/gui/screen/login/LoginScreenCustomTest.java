@@ -1,18 +1,15 @@
-package junit.org.rapidpm.vaadin.jumpstart.gui.screens.login;
+package junit.org.rapidpm.vaadin.jumpstart.gui.screen.login;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
 import org.rapidpm.vaadin.jumpstart.gui.screen.login.LoginScreenCustom;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.elements.TextFieldElement;
-import com.vaadin.testbench.elements.VerticalLayoutElement;
 import junit.org.rapidpm.vaadin.jumpstart.gui.BaseUITest;
 
 /**
@@ -20,20 +17,16 @@ import junit.org.rapidpm.vaadin.jumpstart.gui.BaseUITest;
  */
 public class LoginScreenCustomTest extends BaseUITest {
 
-    // not working on MainLayout so far
-    protected WebElement mainLayout() {
-        return $(VerticalLayoutElement.class)
-            .id(LoginScreenCustom.LOGIN_SCREEN);
-    }
-
     @Test
-    public void test001()  throws Exception {
+    public void test001()
+        throws Exception {
         $(TextFieldElement.class).id(LoginScreenCustom.USERNAME_FIELD).setValue("admin");
         $(TextFieldElement.class).id(LoginScreenCustom.PASSWORD_FIELD).setValue("admin");
         ComboBoxElement comboBoxElement = $(ComboBoxElement.class).id(LoginScreenCustom.LANGUAGE_COMBO);
         comboBoxElement.selectByText(propertyService.resolve("login.language.en"));
         $(ButtonElement.class).id(LoginScreenCustom.LOGIN_BUTTON).click();
-
+        System.out.println("comboBoxElement = " + comboBoxElement);
+        Assert.fail();
     }
 
     @Test
@@ -48,9 +41,9 @@ public class LoginScreenCustomTest extends BaseUITest {
 
         NotificationElement notification = $(NotificationElement.class).first();
         assertEquals(propertyService.resolve("login.failed"),
-            notification.getCaption());
+                     notification.getCaption());
         assertEquals(propertyService.resolve("login.failed.description"),
-            notification.getDescription());
+                     notification.getDescription());
         assertEquals("warning", notification.getType());
     }
 }

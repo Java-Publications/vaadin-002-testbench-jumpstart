@@ -88,30 +88,18 @@
         <vaadin.version>8.0.5</vaadin.version>
         <vaadin-testbench-api.version>5.0-SNAPSHOT</vaadin-testbench-api.version>
 
-        <!--languages-->
-        <kotlin.version>1.0.5</kotlin.version>
-
         <!--TDD-->
         <jacoco.version>0.7.9</jacoco.version>
         <jacoco-maven-plugin.include>**/org/rapidpm/**/*</jacoco-maven-plugin.include>
-
-        <jmh.version>1.18</jmh.version>
-
-        <pitest-target-classes>org.rapidpm.*</pitest-target-classes>
-        <pitest-target-test-classes>junit.org.rapidpm.*</pitest-target-test-classes>
-        <findbugs-maven-plugin.onlyAnalyze>org.rapidpm.*</findbugs-maven-plugin.onlyAnalyze>
 
         <!--logging-->
         <slf4j.version>1.7.25</slf4j.version>
         <log4j-api.version>2.8.1</log4j-api.version>
 
-        <!--version bundles-->
-        <undertow.version>2.0.0.Alpha1</undertow.version>
-        <resteasy-undertow.version>3.1.2.Final</resteasy-undertow.version>
-
+        <!--RapidPM bundles-->
         <rapidpm-microservice.version>0.8.1-SNAPSHOT</rapidpm-microservice.version>
-
-        <vaadin-charts.version>4.0.0</vaadin-charts.version>
+        <rapidpm-functional-reactive.version>0.0.2-SNAPSHOT</rapidpm-functional-reactive.version>
+        <rapidpm-functional-vaadin-addons.version>0.0.1-SNAPSHOT</rapidpm-functional-vaadin-addons.version>
     </properties>
 
     <dependencyManagement>
@@ -170,13 +158,13 @@
         <dependency>
             <groupId>org.rapidpm</groupId>
             <artifactId>rapidpm-functional-reactive</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
+            <version>${rapidpm-functional-reactive.version}</version>
         </dependency>
         <!--https://github.com/functional-reactive/functional-vaadin-addons-->
         <dependency>
             <groupId>org.rapidpm</groupId>
             <artifactId>rapidpm-functional-vaadin-addons</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${rapidpm-functional-vaadin-addons.version}</version>
         </dependency>
 
 
@@ -393,7 +381,12 @@
                     <artifactId>findbugs-maven-plugin</artifactId>
                     <version>3.0.4</version>
                 </plugin>
-
+                <!--Docker -->
+                <plugin>
+                    <groupId>io.fabric8</groupId>
+                    <artifactId>docker-maven-plugin</artifactId>
+                    <version>0.20.1</version>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -632,10 +625,85 @@
                                     <goal>report</goal>
                                 </goals>
                             </execution>
+                            <execution>
+                                <id>default-check</id>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <rule>
+                                            <element>BUNDLE</element>
+                                            <limits>
+                                                <limit>
+                                                    <counter>COMPLEXITY
+                                                    </counter>
+                                                    <value>COVEREDRATIO</value>
+                                                    <!--<minimum>0.60</minimum>-->
+                                                    <minimum>0.00</minimum>
+                                                </limit>
+                                            </limits>
+                                        </rule>
+                                        <!--<rule>-->
+                                        <!--<element>CLASS</element>-->
+                                        <!--<excludes>-->
+                                        <!--<exclude>**/junit/**</exclude>-->
+                                        <!--</excludes>-->
+                                        <!--<limits>-->
+                                        <!--<limit>-->
+                                        <!--<counter>LINE</counter>-->
+                                        <!--<value>COVEREDRATIO</value>-->
+                                        <!--<minimum>0.50</minimum>-->
+                                        <!--</limit>-->
+                                        <!--</limits>-->
+                                        <!--</rule>-->
+                                    </rules>
+                                </configuration>
+                            </execution>
                         </executions>
                     </plugin>
                     <!-- Directory plugin to find parent root directory absolute path -->
 
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>qm-qs-jacoco-junit</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <inherited>true</inherited>
+                        <configuration>
+                            <systemPropertyVariables>
+                                <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
+                            </systemPropertyVariables>
+                            <includes>
+                                <include>**/junit/**</include>
+                            </includes>
+                            <excludes>
+                                <exclude>**/*ini/**</exclude>
+                                <exclude>**/*txt/**</exclude>
+                                <exclude>**/*.jpg</exclude>
+
+                            </excludes>
+                            <argLine>-Xmx286m -Dsonar.pitest.mode=reuseReport</argLine>
+
+                            <forkMode>always</forkMode>
+
+                            <threadCount>4</threadCount>
+                            <reportFormat>xml</reportFormat>
+                            <reportFormat>html</reportFormat>
+                            <!--<testSourceDirectory>${project.build.directory}/generated-test-sources/test-annotations</testSourceDirectory>-->
+                            <!--<classesDirectory>target/generated-classes/emma/classes</classesDirectory>-->
+                        </configuration>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
@@ -660,8 +728,7 @@
                                 <exclude>**/*txt/**</exclude>
                                 <exclude>**/*.jpg</exclude>
                             </excludes>
-                            <argLine>-Xmx286m -Dsonar.pitest.mode=reuseReport
-                            </argLine>
+                            <argLine>-Xmx286m -Dsonar.pitest.mode=reuseReport</argLine>
                             <threadCount>4</threadCount>
                             <!--<forkMode>always</forkMode>-->
                             <!--<forkCount></forkCount>-->
@@ -674,70 +741,7 @@
                 </plugins>
             </build>
         </profile>
-        <profile>
-            <id>qm-qs-jacoco-junit</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <inherited>true</inherited>
-                        <configuration>
-                            <systemPropertyVariables>
-                                <jacoco-agent.destfile>target/jacoco.exec
-                                </jacoco-agent.destfile>
-                            </systemPropertyVariables>
-                            <includes>
-                                <include>**/junit/**</include>
-                            </includes>
-                            <excludes>
-                                <exclude>**/*ini/**</exclude>
-                                <exclude>**/*txt/**</exclude>
-                                <exclude>**/*.jpg</exclude>
-                            </excludes>
-                            <argLine>-Xmx286m -Dsonar.pitest.mode=reuseReport
-                            </argLine>
-                            <forkMode>always</forkMode>
-                            <threadCount>4</threadCount>
-                            <reportFormat>xml</reportFormat>
-                            <reportFormat>html</reportFormat>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>qm-qs-jacoco-junit-testbench</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <inherited>true</inherited>
-                        <configuration>
-                            <systemPropertyVariables>
-                                <jacoco-agent.destfile>target/jacoco.exec
-                                </jacoco-agent.destfile>
-                            </systemPropertyVariables>
-                            <includes>
-                                <include>**/junit/**</include>
-                                <include>**/testbench/**</include>
-                            </includes>
-                            <forkMode>always</forkMode>
-                            <reportFormat>xml</reportFormat>
-                            <reportFormat>html</reportFormat>
-                            <!--<classesDirectory>target/generated-classes/emma/classes</classesDirectory>-->
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
+
 
         <profile>
             <id>repo-allow-vaadin</id>
@@ -778,6 +782,96 @@
                 </repository>
             </repositories>
         </profile>
+        <profile>
+            <id>docker-selenium-hub</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.fabric8</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
+                        <configuration>
+                            <autoPull>on</autoPull>
+                            <startParallel>false</startParallel>
+                            <images>
+                                <image>
+                                    <name>selenium/hub</name>
+                                    <alias>selenium-hub</alias>
+                                    <run>
+                                        <ports>
+                                            <port>4444:4444</port>
+                                        </ports>
+                                    </run>
+                                </image>
+                                <image>
+                                    <name>selenium/node-chrome</name>
+                                    <alias>selenium-node-chrome</alias>
+                                    <run>
+                                        <links>
+                                            <link>selenium-hub:hub</link>
+                                        </links>
+                                        <dependsOn>
+                                            <container>selenium-hub</container>
+                                        </dependsOn>
+                                    </run>
+                                </image>
+                                <image>
+                                    <name>selenium/node-phantomjs</name>
+                                    <alias>selenium-node-phantomjs</alias>
+                                    <run>
+                                        <links>
+                                            <link>selenium-hub:hub</link>
+                                        </links>
+                                        <dependsOn>
+                                            <container>selenium-hub</container>
+                                        </dependsOn>
+                                    </run>
+                                </image>
+                                <image>
+                                    <name>selenium/node-firefox</name>
+                                    <alias>selenium-node-firefox</alias>
+                                    <run>
+                                        <links>
+                                            <link>selenium-hub:hub</link>
+                                        </links>
+                                        <dependsOn>
+                                            <container>selenium-hub</container>
+                                        </dependsOn>
+                                    </run>
+                                </image>
+
+
+                            </images>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>docker:build</id>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>docker:start</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>start</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>docker:stop</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>stop</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
     </profiles>
 
 </project>
