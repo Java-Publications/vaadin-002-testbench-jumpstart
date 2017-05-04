@@ -7,11 +7,13 @@ import org.jbehave.core.annotations.BeforeScenario;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
+import org.junit.Before;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.PageFactory;
 
 import com.vaadin.testbench.TestBenchTestCase;
+import com.vaadin.testbenchexample.bootstrap.TestBase;
 import com.vaadin.testbenchexample.pageobjectexample.pageobjects.CalculatorPageObject;
 
 /**
@@ -20,20 +22,23 @@ import com.vaadin.testbenchexample.pageobjectexample.pageobjects.CalculatorPageO
  *
  * See http://jbehave.org for details.
  */
-public class CalculatorSteps extends TestBenchTestCase {
+public class CalculatorSteps extends TestBase {
 
-    private WebDriver driver;
+//    private WebDriver driver;
     private CalculatorPageObject calculator;
 
+
     @BeforeScenario
-    public void setUpWebDriver() {
-        driver = new ChromeDriver();
-        calculator = PageFactory.initElements(driver, CalculatorPageObject.class);
+    public void setUpWebDriver()
+        throws Exception {
+        super.setUp();
+        calculator = PageFactory.initElements(getDriver(), CalculatorPageObject.class);
     }
 
     @AfterScenario
-    public void tearDownWebDriver() {
-        driver.quit();
+    public void tearDownWebDriver()
+        throws Exception {
+        super.tearDown();
     }
 
     @Given("I have the calculator open")
