@@ -24,6 +24,10 @@
     <artifactId>testbench-jumpstart</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
+    <modules>
+        <module>modules</module>
+    </modules>
+
 
     <packaging>pom</packaging>
 
@@ -34,7 +38,7 @@
         <url>http://www.vaadin.com</url>
     </organization>
     <url>VAADIN BLOG URL</url>
-    <name>Vaadin Testbgench Jumpstart</name>
+    <name>Vaadin Testbench Jumpstart</name>
     <description>An industrial style Jumpstart project
         to show the usage of Testbench and other Pro Tools
     </description>
@@ -79,7 +83,6 @@
         </license>
     </licenses>
 
-
     <properties>
         <!--technical-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -90,7 +93,9 @@
 
         <!--TDD-->
         <jacoco.version>0.7.9</jacoco.version>
-        <jacoco-maven-plugin.include>**/org/rapidpm/**/*</jacoco-maven-plugin.include>
+        <!--<jacoco-maven-plugin.include>**/org/rapidpm/**/*</jacoco-maven-plugin.include>-->
+        <!--<jacoco-maven-plugin.include>**/org/rapidpm/**/*</jacoco-maven-plugin.include>-->
+        <!--<jacoco-maven-plugin.include>**/**/*</jacoco-maven-plugin.include>-->
 
         <!--logging-->
         <slf4j.version>1.7.25</slf4j.version>
@@ -98,12 +103,19 @@
 
         <!--RapidPM bundles-->
         <rapidpm-microservice.version>0.8.1-SNAPSHOT</rapidpm-microservice.version>
-        <rapidpm-functional-reactive.version>0.0.2-SNAPSHOT</rapidpm-functional-reactive.version>
+        <rapidpm-functional-reactive.version>0.0.3-SNAPSHOT</rapidpm-functional-reactive.version>
         <rapidpm-functional-vaadin-addons.version>0.0.1-SNAPSHOT</rapidpm-functional-vaadin-addons.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+
+            <!--Project Stuff-->
+            <dependency>
+                <groupId>org.rapidpm.vaadin</groupId>
+                <artifactId>testbench-jumpstart-modules-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <!--Vaadin stuff-->
             <dependency>
@@ -128,12 +140,36 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>org.rapidpm</groupId>
+                <artifactId>rapidpm-functional-reactive</artifactId>
+                <version>${rapidpm-functional-reactive.version}</version>
+            </dependency>
+            <!--common stuff-->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.12</version>
+                <scope>test</scope>
+            </dependency>
 
+            <dependency>
+                <groupId>org.jbehave</groupId>
+                <artifactId>jbehave-core</artifactId>
+                <version>3.7.5</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>junit</groupId>
+                        <artifactId>junit-dep</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
-
     <dependencies>
+
         <!--Vaadin -->
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -152,7 +188,16 @@
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-client-compiled</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-testbench</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-testbench-api</artifactId>
+            <scope>test</scope>
+        </dependency>
         <!--RapidPM-->
         <!--https://github.com/functional-reactive/functional-reactive-lib-->
         <dependency>
@@ -191,7 +236,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
             <scope>test</scope>
         </dependency>
 
@@ -389,6 +433,57 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-maven-plugin</artifactId>
+                <configuration>
+                    <extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
+                    <webappDirectory>
+                        ${basedir}/target/classes/VAADIN/widgetsets
+                    </webappDirectory>
+                    <draftCompile>false</draftCompile>
+                    <compileReport>false</compileReport>
+                    <style>OBF</style>
+                    <strict>true</strict>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>update-theme</goal>
+                            <!-- Comment out compile-theme goal to use on-the-fly theme compilation -->
+                            <goal>compile-theme</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.17</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <includes>
+                        <include>**/org/rapidpm/**/</include>
+                        <!--<include>**/bdd/*.java</include>-->
+                    </includes>
+                    <!-- So that the browser correctly gains focus on Mac
+                        OS X -->
+                    <systemProperties>
+                        <property>
+                            <name>java.awt.headless</name>
+                            <value>true</value>
+                        </property>
+                    </systemProperties>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
     <repositories>
@@ -407,32 +502,6 @@
 
     <profiles>
         <profile>
-            <id>gen-javadoc</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>attach-javadocs</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <destDir>target/doc/apidoc/</destDir>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
             <id>java-jdk-8</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
@@ -448,294 +517,6 @@
                             <showDeprecation>true</showDeprecation>
                             <showWarnings>false</showWarnings>
                             <optimize>true</optimize>
-
-                        </configuration>
-
-                        <executions>
-                            <execution>
-                                <phase>compile</phase>
-                                <id>compile-001</id>
-                                <goals>
-                                    <goal>compile</goal>
-                                </goals>
-                                <!--BUG JDK-8062800-->
-                                <configuration>
-                                    <useIncrementalCompilation>false
-                                    </useIncrementalCompilation>
-                                </configuration>
-                                <!--BUG JDK-8062800-->
-                            </execution>
-                            <execution>
-                                <phase>test-compile</phase>
-                                <id>test-compile-001</id>
-                                <goals>
-                                    <goal>testCompile</goal>
-                                </goals>
-                                <!--BUG JDK-8062800-->
-                                <configuration>
-                                    <useIncrementalCompilation>false
-                                    </useIncrementalCompilation>
-                                </configuration>
-                                <!--BUG JDK-8062800-->
-                            </execution>
-                            <!--&lt;!&ndash;<execution>&ndash;&gt;-->
-                            <!--<phase>test-compile</phase>-->
-                            <!--<id>test-compile-002</id>-->
-                            <!--<goals><goal>testCompile</goal></goals>-->
-                            <!--&lt;!&ndash;BUG JDK-8062800&ndash;&gt;-->
-                            <!--<configuration>-->
-                            <!--<useIncrementalCompilation>false</useIncrementalCompilation>-->
-                            <!--</configuration>-->
-                            <!--&lt;!&ndash;BUG JDK-8062800&ndash;&gt;-->
-                            <!--</execution>-->
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>java-jdk-9</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <configuration>
-                            <source>1.9</source>
-                            <target>1.9</target>
-                            <showDeprecation>true</showDeprecation>
-                            <showWarnings>true</showWarnings>
-                            <testCompilerArgument>-Xlint</testCompilerArgument>
-                            <generatedSourcesDirectory>
-                                ${project.build.directory}/generatedsources/annotations
-                            </generatedSourcesDirectory>
-                            <generatedTestSourcesDirectory>
-                                ${project.build.directory}/generated-test-sources/test-annotations
-                            </generatedTestSourcesDirectory>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>test-compile</phase>
-                                <id>test-compile-001</id>
-                                <goals>
-                                    <goal>testCompile</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <phase>test-compile</phase>
-                                <id>test-compile-002</id>
-                                <goals>
-                                    <goal>testCompile</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <!--<executions>-->
-                        <!--<execution>-->
-                        <!--<id>default-compile</id>-->
-                        <!--<inherited>false</inherited>-->
-                        <!--<phase>compile</phase>-->
-                        <!--<goals>-->
-                        <!--<goal>compile</goal>-->
-                        <!--</goals>-->
-                        <!--</execution>-->
-                        <!--<execution>-->
-                        <!--<id>default-testCompile</id>-->
-                        <!--<inherited>false</inherited>-->
-                        <!--<phase>test-compile</phase>-->
-                        <!--<goals>-->
-                        <!--<goal>testCompile</goal>-->
-                        <!--</goals>-->
-                        <!--</execution>-->
-                        <!--</executions>-->
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <profile>
-            <id>qm-qs-jacoco</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-
-            <dependencyManagement>
-                <dependencies>
-                    <dependency>
-                        <!--  must be on the classpath  -->
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>org.jacoco.agent</artifactId>
-                        <classifier>runtime</classifier>
-                        <version>${jacoco.version}</version>
-                        <scope>test</scope>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>org.jacoco.ant</artifactId>
-                        <version>${jacoco.version}</version>
-                    </dependency>
-                </dependencies>
-            </dependencyManagement>
-
-            <dependencies>
-                <!--tdd-->
-                <dependency>
-                    <!--  must be on the classpath  -->
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>org.jacoco.agent</artifactId>
-                    <classifier>runtime</classifier>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <configuration>
-                            <includes>
-                                <include>${jacoco-maven-plugin.include}
-                                </include>
-                            </includes>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>default-instrument</id>
-                                <goals>
-                                    <goal>instrument</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>default-restore-instrumented-classes</id>
-                                <goals>
-                                    <goal>restore-instrumented-classes</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <goals>
-                                    <goal>prepare-agent</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>default-report</id>
-                                <phase>prepare-package</phase>
-                                <goals>
-                                    <goal>report</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>default-check</id>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                                <configuration>
-                                    <rules>
-                                        <rule>
-                                            <element>BUNDLE</element>
-                                            <limits>
-                                                <limit>
-                                                    <counter>COMPLEXITY
-                                                    </counter>
-                                                    <value>COVEREDRATIO</value>
-                                                    <!--<minimum>0.60</minimum>-->
-                                                    <minimum>0.00</minimum>
-                                                </limit>
-                                            </limits>
-                                        </rule>
-                                        <!--<rule>-->
-                                        <!--<element>CLASS</element>-->
-                                        <!--<excludes>-->
-                                        <!--<exclude>**/junit/**</exclude>-->
-                                        <!--</excludes>-->
-                                        <!--<limits>-->
-                                        <!--<limit>-->
-                                        <!--<counter>LINE</counter>-->
-                                        <!--<value>COVEREDRATIO</value>-->
-                                        <!--<minimum>0.50</minimum>-->
-                                        <!--</limit>-->
-                                        <!--</limits>-->
-                                        <!--</rule>-->
-                                    </rules>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <!-- Directory plugin to find parent root directory absolute path -->
-
-                </plugins>
-            </build>
-        </profile>
-
-        <profile>
-            <id>qm-qs-jacoco-junit</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <inherited>true</inherited>
-                        <configuration>
-                            <systemPropertyVariables>
-                                <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
-                            </systemPropertyVariables>
-                            <includes>
-                                <include>**/junit/**</include>
-                            </includes>
-                            <excludes>
-                                <exclude>**/*ini/**</exclude>
-                                <exclude>**/*txt/**</exclude>
-                                <exclude>**/*.jpg</exclude>
-
-                            </excludes>
-                            <argLine>-Xmx286m -Dsonar.pitest.mode=reuseReport</argLine>
-
-                            <forkMode>always</forkMode>
-
-                            <threadCount>4</threadCount>
-                            <reportFormat>xml</reportFormat>
-                            <reportFormat>html</reportFormat>
-                            <!--<testSourceDirectory>${project.build.directory}/generated-test-sources/test-annotations</testSourceDirectory>-->
-                            <!--<classesDirectory>target/generated-classes/emma/classes</classesDirectory>-->
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>qm-qs-surefire-fork</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <inherited>true</inherited>
-                        <configuration>
-                            <includes>
-                                <include>**/junit/**</include>
-                            </includes>
-                            <excludes>
-                                <exclude>**/*ini/**</exclude>
-                                <exclude>**/*txt/**</exclude>
-                                <exclude>**/*.jpg</exclude>
-                            </excludes>
-                            <argLine>-Xmx286m -Dsonar.pitest.mode=reuseReport</argLine>
-                            <threadCount>4</threadCount>
-                            <!--<forkMode>always</forkMode>-->
-                            <!--<forkCount></forkCount>-->
-                            <reuseForks>false</reuseForks>
-                            <forkCount>4</forkCount>
-                            <reportFormat>xml</reportFormat>
-                            <reportFormat>html</reportFormat>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -750,7 +531,7 @@
             </activation>
             <repositories>
                 <repository>
-                    <id>vaadin-repo</id>
+                    <id>vaadin-addons</id>
                     <url>http://maven.vaadin.com/vaadin-addons</url>
                     <!--<url>http://maven.vaadin.com/</url>-->
                 </repository>
@@ -759,6 +540,16 @@
                     <name>Vaadin Pre-releases</name>
                     <url>https://maven.vaadin.com/vaadin-prereleases</url>
                 </repository>
+                <repository>
+                    <id>vaadin-snapshots</id>
+                    <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
             </repositories>
             <pluginRepositories>
                 <pluginRepository>
@@ -766,9 +557,18 @@
                     <name>Vaadin Pre-releases</name>
                     <url>https://maven.vaadin.com/vaadin-prereleases</url>
                 </pluginRepository>
+                <pluginRepository>
+                    <id>vaadin-snapshots</id>
+                    <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </pluginRepository>
             </pluginRepositories>
         </profile>
-
         <!--Testbench stuff-->
         <profile>
             <id>repo-allow-jitpack</id>
@@ -781,95 +581,6 @@
                     <url>https://jitpack.io</url>
                 </repository>
             </repositories>
-        </profile>
-        <profile>
-            <id>docker-selenium-hub</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>io.fabric8</groupId>
-                        <artifactId>docker-maven-plugin</artifactId>
-                        <configuration>
-                            <autoPull>on</autoPull>
-                            <startParallel>false</startParallel>
-                            <images>
-                                <image>
-                                    <name>selenium/hub</name>
-                                    <alias>selenium-hub</alias>
-                                    <run>
-                                        <ports>
-                                            <port>4444:4444</port>
-                                        </ports>
-                                    </run>
-                                </image>
-                                <image>
-                                    <name>selenium/node-chrome</name>
-                                    <alias>selenium-node-chrome</alias>
-                                    <run>
-                                        <links>
-                                            <link>selenium-hub:hub</link>
-                                        </links>
-                                        <dependsOn>
-                                            <container>selenium-hub</container>
-                                        </dependsOn>
-                                    </run>
-                                </image>
-                                <image>
-                                    <name>selenium/node-phantomjs</name>
-                                    <alias>selenium-node-phantomjs</alias>
-                                    <run>
-                                        <links>
-                                            <link>selenium-hub:hub</link>
-                                        </links>
-                                        <dependsOn>
-                                            <container>selenium-hub</container>
-                                        </dependsOn>
-                                    </run>
-                                </image>
-                                <image>
-                                    <name>selenium/node-firefox</name>
-                                    <alias>selenium-node-firefox</alias>
-                                    <run>
-                                        <links>
-                                            <link>selenium-hub:hub</link>
-                                        </links>
-                                        <dependsOn>
-                                            <container>selenium-hub</container>
-                                        </dependsOn>
-                                    </run>
-                                </image>
-
-
-                            </images>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>docker:build</id>
-                                <goals>
-                                    <goal>build</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>docker:start</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>start</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>docker:stop</id>
-                                <phase>install</phase>
-                                <goals>
-                                    <goal>stop</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
 
     </profiles>

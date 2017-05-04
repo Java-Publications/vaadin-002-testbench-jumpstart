@@ -46,4 +46,10 @@ public class LoginScreenCustomTest extends BaseUITest {
                      notification.getDescription());
         assertEquals("warning", notification.getType());
     }
+
+    @Test
+    public void test2fail()
+        throws Exception {
+        Assert.fail();
+    }
 }
