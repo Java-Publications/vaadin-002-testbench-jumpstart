@@ -1,6 +1,7 @@
 package com.vaadin.testbenchexample.pageobjectexample.pageobjects;
 
-import com.vaadin.testbenchexample.bootstrap.TestBase;
+import static org.rapidpm.vaadin.testbench.addon.MicroserviceTestUtils.baseURL;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -12,7 +13,7 @@ import com.vaadin.testbench.TestBenchTestCase;
  * The CalculatorPageObject knows how to enter digits and operands
  * in the calculator and read back the display. As a bonus this class
  * is implemented as a fluent interface, with chainable methods.
- *
+ * <p>
  * The calculator can also be used by calling only the CalculatorPageObject#enter
  * method with the buttons to press as a sequence of characters (given as a string).
  * Usually there is no need for two different ways of using a page object, but here
@@ -46,7 +47,8 @@ public class CalculatorPageObject extends TestBenchTestCase {
     /**
      * Constructs a new calculator page object
      *
-     * @param driver the driver to use
+     * @param driver
+     *     the driver to use
      */
     public CalculatorPageObject(WebDriver driver) {
         setDriver(driver);
@@ -56,13 +58,14 @@ public class CalculatorPageObject extends TestBenchTestCase {
      * Opens the URL where the calculator resides.
      */
     public void open() {
-        getDriver().get(TestBase.baseUrl + "?restartApplication");
+        getDriver().get(baseURL.get() + "?restartApplication");
     }
 
     /**
      * Pushes buttons on the calculator
      *
-     * @param buttons the buttons to push, e.g. "1234" or "1+2", etc.
+     * @param buttons
+     *     the buttons to push, e.g. "1234" or "1+2", etc.
      * @return The same CalculatorPageObject instance for method chaining.
      */
     public CalculatorPageObject enter(String buttons) {
@@ -75,7 +78,8 @@ public class CalculatorPageObject extends TestBenchTestCase {
     /**
      * Pushes the specified button.
      *
-     * @param button The character representation of the button to push.
+     * @param button
+     *     The character representation of the button to push.
      */
     private void pushButton(char button) {
         getDriver().findElement(By.id("button_" + button)).click();
@@ -84,7 +88,8 @@ public class CalculatorPageObject extends TestBenchTestCase {
     /**
      * Pushes the divide button.
      *
-     * @param number the number to enter after pushing the divide button.
+     * @param number
+     *     the number to enter after pushing the divide button.
      * @return The same CalculatorPageObject for method chaining.
      */
     public CalculatorPageObject divideBy(String number) {
@@ -95,7 +100,8 @@ public class CalculatorPageObject extends TestBenchTestCase {
     /**
      * Pushes the multiplication button and enters the number provided.
      *
-     * @param number the number to enter after pushing the multiply button.
+     * @param number
+     *     the number to enter after pushing the multiply button.
      * @return The same CalculatorPageObject for method chaining.
      */
     public CalculatorPageObject multiplyBy(String number) {
@@ -106,7 +112,8 @@ public class CalculatorPageObject extends TestBenchTestCase {
     /**
      * Pushes the add button and enters the number provided.
      *
-     * @param number the number to enter after pushing the add button.
+     * @param number
+     *     the number to enter after pushing the add button.
      * @return The same CalculatorPageObject for method chaining.
      */
     public CalculatorPageObject add(String number) {
@@ -127,7 +134,8 @@ public class CalculatorPageObject extends TestBenchTestCase {
     /**
      * Pushes the subtract button and enters the number provided.
      *
-     * @param number the number to enter after pushing the subtract button.
+     * @param number
+     *     the number to enter after pushing the subtract button.
      * @return The same CalculatorPageObject for method chaining.
      */
     public CalculatorPageObject subtract(String number) {

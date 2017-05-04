@@ -46,8 +46,8 @@ public interface Context {
         Stream.of(
             //running - without Vaadin Selenium Hub
             nextQuad(browserChrome, platformMAC, runningLocalBrowser, localHost),
-            nextQuad(browserPhantomJS, platformMAC, runningLocalBrowser, localHost),
-            nextQuad(browserChrome, platformLinux, runningLocalBrowser, localHost),
+//            nextQuad(browserPhantomJS, platformMAC, runningLocalBrowser, localHost),
+//            nextQuad(browserChrome, platformLinux, runningLocalBrowser, localHost)
 //            nextQuad(browserPhantomJS, platformLinux, runningLocalBrowser, localHost),
             nextQuad(browserChrome, platformLinux, runningSeleniumHub, seleniumHubLocal)
 //            nextQuad(browserPhantomJS, platformLinux, runningSeleniumHub, seleniumHubLocal)

@@ -1,5 +1,8 @@
 package com.vaadin.testbenchexample.bootstrap;
 
+import static org.rapidpm.frp.vaadin.addon.testbench.BrowserDriverFunctions.initSystemProperties;
+import static org.rapidpm.vaadin.testbench.addon.MicroserviceTestUtils.baseURL;
+import static org.rapidpm.vaadin.testbench.addon.MicroserviceTestUtils.setUpMicroserviceProperties;
 import static org.junit.Assert.assertFalse;
 import static org.junit.runners.Parameterized.Parameters;
 import static org.rapidpm.frp.matcher.Case.match;
@@ -30,11 +33,13 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.rapidpm.ddi.DI;
 import org.rapidpm.frp.functions.CheckedConsumer;
 import org.rapidpm.frp.functions.CheckedExecutor;
 import org.rapidpm.frp.matcher.Case;
 import org.rapidpm.frp.model.Quad;
 import org.rapidpm.frp.model.Result;
+import org.rapidpm.microservice.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,19 +55,10 @@ import com.vaadin.testbenchexample.UsingHubITCase;
 @RunWith(value = Parameterized.class)
 public class TestBase extends TestBenchTestCase {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestBase.class);
-    public static final String baseUrl = "http://localhost:8080/";
 
     @Rule public TestName testName = new TestName();
 
-    static void initSystemProperties() {
-        final String pointToStartFrom = new File("").getAbsolutePath();
-        final String DATA_DRIVER_BASE_FOLDER = "/_data/driver/";
-        final String OS = "osx";
-        String basePath = pointToStartFrom + DATA_DRIVER_BASE_FOLDER + OS;
-        System.setProperty("webdriver.chrome.driver", basePath + "/chrome/chromedriver");
-        System.setProperty("webdriver.gecko.driver", basePath + "/gecko/geckodriver");
-        System.setProperty("phantomjs.binary.path", basePath + "/phantomjs/phantomjs");
-    }
+
 
     @Test
     public void doNothing()
@@ -90,7 +86,15 @@ public class TestBase extends TestBenchTestCase {
     @Before
     public void setUp()
         throws Exception {
-initSystemProperties();
+        initSystemProperties();
+        setUpMicroserviceProperties();
+
+        DI.clearReflectionModel();
+        DI.activatePackages("org.rapidpm");
+        DI.activatePackages("com.vaadin.testbenchexample");
+        DI.activatePackages(this.getClass());
+        DI.activateDI(this);
+        Main.deploy();
         ((CheckedExecutor) this::setUpTestbench)
             .execute()
             .bind(
@@ -103,16 +107,16 @@ initSystemProperties();
 
                     // Open the test application URL with the ?restartApplication URL
                     // parameter to ensure Vaadin provides us with a fresh UI instance.
-                    getDriver().get(baseUrl + "?restartApplication");
+                    getDriver().get(baseURL.get() + "?restartApplication");
 
                     // If you deploy using WTP in Eclipse, this will fail. You should
                     // update baseUrl to point to where the app is deployed.
                     String pageSource = getDriver().getPageSource();
-                    String errorMsg = "Application is not available at " + baseUrl + ". Server not started?";
+                    String errorMsg = "Application is not available at " + baseURL.get() + ". Server not started?";
                     assertFalse(errorMsg, pageSource.contains("HTTP Status 404") ||
                                           pageSource.contains("can't establish a connection to the server"));
 
-                    },
+                },
                 failed -> {
                     LOGGER.warn("setting up Testbench failed for !! "
                                 + dataConfig.getT1().get() + " - "
@@ -129,16 +133,15 @@ initSystemProperties();
     @After
     public void tearDown()
         throws Exception {
-
         // Calling quit() on the driver closes the test browser.
         // When called like this, the browser is immediately closed on _any_
         // error. If you wish to take a screenshot of the browser at the time
         // the error occurred, you'll need to add the ScreenshotOnFailureRule
         // to your test and remove this call to quit().
-//        getDriver().quit();
-//        ((CheckedExecutor) () -> saveScreenshot("002_after")).execute();
-        ((CheckedExecutor) this::tearDownTestbench).execute();
-
+        //        ((CheckedExecutor) () -> saveScreenshot("002_after")).execute();
+        ((CheckedExecutor) () -> getDriver().quit()).execute();
+        ((CheckedExecutor) Main::stop).execute();
+        ((CheckedExecutor) DI::clearReflectionModel).execute();
 
     }
 
@@ -157,7 +160,7 @@ initSystemProperties();
             .ifPresent(this::setDriver);
 
         Optional.ofNullable(getDriver())
-                .ifPresent(d -> d.get(baseUrl + "?restartApplication"));
+                .ifPresent(d -> d.get(baseURL.get() + "?restartApplication"));
 
         if (getDriver() instanceof PhantomJSDriver) {
             final Capabilities remoteWebDriverCapabilities = ((RemoteWebDriver) getDriver()).getCapabilities();
@@ -218,12 +221,5 @@ initSystemProperties();
                 success -> LOGGER.info("file sucessfull writen " + file.getAbsolutePath()),
                 LOGGER::warn);
     };
-
-    public void tearDownTestbench()
-        throws Exception {
-        Optional
-            .ofNullable(getDriver())
-            .ifPresent(WebDriver::quit);
-    }
 
 }
