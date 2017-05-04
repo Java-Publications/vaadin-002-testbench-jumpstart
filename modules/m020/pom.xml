@@ -11,6 +11,12 @@
 
     <artifactId>testbench-jumpstart-modules-m020</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.rapidpm.vaadin</groupId>
+            <artifactId>testbench-jumpstart-modules-core</artifactId>
+        </dependency>
+    </dependencies>
 
 
     <profiles>
