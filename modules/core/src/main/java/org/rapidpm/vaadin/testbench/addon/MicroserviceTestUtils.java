@@ -6,6 +6,7 @@ import static org.rapidpm.microservice.MainUndertow.DEFAULT_SERVLET_PORT;
 import static org.rapidpm.microservice.MainUndertow.MYAPP;
 import static org.rapidpm.microservice.MainUndertow.SERVLET_PORT_PROPERTY;
 
+import java.io.File;
 import java.util.function.Supplier;
 
 import javax.ws.rs.client.Client;
@@ -23,6 +24,16 @@ import com.google.gson.JsonParser;
  * Created by svenruppert on 23.04.17.
  */
 public class MicroserviceTestUtils {
+
+    public static void initSystemProperties() {
+        final String pointToStartFrom = new File("").getAbsolutePath();
+        final String DATA_DRIVER_BASE_FOLDER = "/_data/driver/";
+        final String OS = "osx";
+        String basePath = pointToStartFrom + DATA_DRIVER_BASE_FOLDER + OS;
+        System.setProperty("webdriver.chrome.driver", basePath + "/chrome/chromedriver");
+        System.setProperty("webdriver.gecko.driver", basePath + "/gecko/geckodriver");
+        System.setProperty("phantomjs.binary.path", basePath + "/phantomjs/phantomjs");
+    }
 
     public static void setUpMicroserviceProperties() {
         final PortUtils portUtils = new PortUtils();

@@ -1,20 +1,17 @@
 package junit.my.vaadin.app;
 
 import static org.rapidpm.vaadin.testbench.addon.MicroserviceTestUtils.baseURL;
+import static org.rapidpm.vaadin.testbench.addon.MicroserviceTestUtils.initSystemProperties;
 import static org.rapidpm.vaadin.testbench.addon.MicroserviceTestUtils.setUpMicroserviceProperties;
-import java.io.File;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.rapidpm.ddi.DI;
 import org.rapidpm.frp.functions.CheckedExecutor;
 import org.rapidpm.microservice.Main;
-import org.rapidpm.vaadin.testbench.addon.MicroserviceTestUtils;
 
 import com.vaadin.testbench.TestBenchTestCase;
 import com.vaadin.testbench.elements.ButtonElement;
@@ -23,16 +20,6 @@ import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 
 public class AddressBookTest extends TestBenchTestCase {
-
-    static void initSystemProperties() {
-        final String pointToStartFrom = new File("").getAbsolutePath();
-        final String DATA_DRIVER_BASE_FOLDER = "/_data/driver/";
-        final String OS = "osx";
-        String basePath = pointToStartFrom + DATA_DRIVER_BASE_FOLDER + OS;
-        System.setProperty("webdriver.chrome.driver", basePath + "/chrome/chromedriver");
-        System.setProperty("webdriver.gecko.driver", basePath + "/gecko/geckodriver");
-        System.setProperty("phantomjs.binary.path", basePath + "/phantomjs/phantomjs");
-    }
 
     @Before
     public void setUp()
@@ -59,7 +46,7 @@ public class AddressBookTest extends TestBenchTestCase {
         //            );
 
         setDriver(new ChromeDriver());
-//        setDriver(new PhantomJSDriver());
+        //        setDriver(new PhantomJSDriver());
     }
 
     @After

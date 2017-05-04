@@ -21,11 +21,6 @@
     </properties>
 
     <dependencies>
-        <!--<dependency>-->
-            <!--<groupId>com.vaadin</groupId>-->
-            <!--<artifactId>vaadin-push</artifactId>-->
-        <!--</dependency>-->
-        <!--Project Stuff-->
         <dependency>
             <groupId>org.rapidpm.vaadin</groupId>
             <artifactId>testbench-jumpstart-modules-core</artifactId>

@@ -57,12 +57,9 @@ import com.vaadin.testbench.TestBenchTestCase;
 @RunWith(value = Parameterized.class)
 public class BaseTestbenchTest extends TestBenchTestCase {
 
-
-
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseTestbenchTest.class);
 
     @Rule public TestName testName = new TestName();
-
 
     static void initSystemProperties() {
         final String pointToStartFrom = new File("").getAbsolutePath();

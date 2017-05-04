@@ -14,8 +14,8 @@
     <modules>
         <module>core</module>
         <module>m010</module>
-        <!--<module>m020</module>-->
-        <!--<module>m030</module>-->
+        <module>m020</module>
+        <module>m030</module>
     </modules>
 
 
