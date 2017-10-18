@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>testbench-jumpstart-modules-m002</artifactId>
+    <groupId>org.rapidpm.vaadin</groupId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>testbench-jumpstart-modules-m002-ui</artifactId>
+
+
+  <dependencies>
+
+
+    <dependency>
+      <groupId>org.rapidpm.vaadin</groupId>
+      <artifactId>testbench-jumpstart-modules-m002-srv</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin-testbench</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-java</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.github.webdriverextensions</groupId>
+        <artifactId>webdriverextensions-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>install-drivers</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <keepDownloadedWebdrivers>true</keepDownloadedWebdrivers>
+          <!--Distributed FS-->
+          <!--<installationDirectory>/Users/andidev/drivers</installationDirectory>-->
+          <installationDirectory>_data/webdrivers</installationDirectory>
+          <drivers>
+            <driver>
+              <name>safari</name>
+            </driver>
+            <driver>
+              <name>chromedriver</name>
+            </driver>
+            <driver>
+              <name>operadriver</name>
+            </driver>
+            <driver>
+              <name>geckodriver</name>
+            </driver>
+            <driver>
+              <name>phantomjs</name>
+            </driver>
+          </drivers>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>qm-qs-pitest</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <!--Enable mutation testing-->
+          <plugin>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-maven</artifactId>
+            <configuration>
+              <outputFormats>
+                <outputFormat>XML</outputFormat>
+                <outputFormat>HTML</outputFormat>
+              </outputFormats>
+              <targetClasses>
+                <param>org.rapidpm.vaadin.ui*</param>
+              </targetClasses>
+              <targetTests>
+                <param>junit.org.rapidpm.*</param>
+              </targetTests>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+      <reporting>
+        <plugins>
+          <plugin>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-maven</artifactId>
+            <reportSets>
+              <reportSet>
+                <reports>
+                  <report>report</report>
+                </reports>
+              </reportSet>
+            </reportSets>
+          </plugin>
+        </plugins>
+      </reporting>
+    </profile>
+  </profiles>
+</project>
