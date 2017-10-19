@@ -18,571 +18,193 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.rapidpm.vaadin</groupId>
-    <artifactId>testbench-jumpstart</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-
-    <modules>
-        <module>modules</module>
-    </modules>
+  <parent>
+    <groupId>org.rapidpm</groupId>
+    <artifactId>rapidpm-dependencies</artifactId>
+    <version>3.5.3-SNAPSHOT</version>
+  </parent>
 
 
-    <packaging>pom</packaging>
+
+  <groupId>org.rapidpm.vaadin</groupId>
+  <artifactId>testbench-jumpstart</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+
+  <modules>
+    <module>bom</module>
+    <module>modules</module>
+  </modules>
 
 
-    <inceptionYear>2017</inceptionYear>
-    <organization>
-        <name>Vaadin</name>
-        <url>http://www.vaadin.com</url>
-    </organization>
-    <url>VAADIN BLOG URL</url>
-    <name>Vaadin Testbench Jumpstart</name>
-    <description>An industrial style Jumpstart project
-        to show the usage of Testbench and other Pro Tools
-    </description>
-
-    <scm>
-        <url>https://github.com/Java-Publications/vaadin-002-testbench-jumpstart
-        </url>
-        <connection>
-            scm:git:https://github.com/Java-Publications/vaadin-002-testbenchs-jumpstart.git
-        </connection>
-        <developerConnection>
-            scm:git:https://github.com/Java-Publications/vaadin-002-testbench-jumpstart.git
-        </developerConnection>
-        <tag>HEAD</tag>
-    </scm>
-    <developers>
-        <developer>
-            <name>Sven Ruppert</name>
-            <email>sven.ruppert@gmail.com</email>
-            <roles>
-                <role>Developer</role>
-            </roles>
-            <timezone>+1</timezone>
-        </developer>
-    </developers>
-    <issueManagement>
-        <system>Github</system>
-        <url>
-            https://github.com/Java-Publications/vaadin-002-testbench-jumpstart/issues
-        </url>
-    </issueManagement>
-    <!--<ciManagement>-->
-    <!--<system>TeamCity</system>-->
-    <!--<url>https://build.rapidpm.org/viewType.html?buildTypeId=RapidPM_Develop_ProxyBuilder_Snapshot</url>-->
-    <!--</ciManagement>-->
-    <licenses>
-        <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-            <comments>A business-friendly OSS license</comments>
-        </license>
-    </licenses>
-
-    <properties>
-        <!--technical-->
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <!--Vaadin-->
-        <vaadin.version>8.0.5</vaadin.version>
-        <vaadin-testbench-api.version>5.0-SNAPSHOT</vaadin-testbench-api.version>
-
-        <!--TDD-->
-        <jacoco.version>0.7.9</jacoco.version>
-        <!--<jacoco-maven-plugin.include>**/org/rapidpm/**/*</jacoco-maven-plugin.include>-->
-        <!--<jacoco-maven-plugin.include>**/org/rapidpm/**/*</jacoco-maven-plugin.include>-->
-        <!--<jacoco-maven-plugin.include>**/**/*</jacoco-maven-plugin.include>-->
-
-        <!--logging-->
-        <slf4j.version>1.7.25</slf4j.version>
-        <log4j-api.version>2.8.1</log4j-api.version>
-
-        <!--RapidPM bundles-->
-        <rapidpm-microservice.version>0.8.1-SNAPSHOT</rapidpm-microservice.version>
-        <rapidpm-functional-reactive.version>0.0.3-SNAPSHOT</rapidpm-functional-reactive.version>
-        <rapidpm-functional-vaadin-addons.version>0.0.1-SNAPSHOT</rapidpm-functional-vaadin-addons.version>
-    </properties>
-
-    <dependencyManagement>
-        <dependencies>
-
-            <!--Project Stuff-->
-            <dependency>
-                <groupId>org.rapidpm.vaadin</groupId>
-                <artifactId>testbench-jumpstart-modules-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <!--Vaadin stuff-->
-            <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>3.0.1</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.vaadin</groupId>
-                <artifactId>vaadin-bom</artifactId>
-                <version>${vaadin.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <!--RapidPM stuff  -->
-            <dependency>
-                <groupId>org.rapidpm.microservice</groupId>
-                <artifactId>rapidpm-microservice-bom</artifactId>
-                <version>${rapidpm-microservice.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.rapidpm</groupId>
-                <artifactId>rapidpm-functional-reactive</artifactId>
-                <version>${rapidpm-functional-reactive.version}</version>
-            </dependency>
-            <!--common stuff-->
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.12</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.jbehave</groupId>
-                <artifactId>jbehave-core</artifactId>
-                <version>3.7.5</version>
-                <scope>test</scope>
-                <exclusions>
-                    <exclusion>
-                        <groupId>junit</groupId>
-                        <artifactId>junit-dep</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
-    <dependencies>
-
-        <!--Vaadin -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-server</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-themes</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-client-compiled</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-testbench</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-testbench-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <!--RapidPM-->
-        <!--https://github.com/functional-reactive/functional-reactive-lib-->
-        <dependency>
-            <groupId>org.rapidpm</groupId>
-            <artifactId>rapidpm-functional-reactive</artifactId>
-            <version>${rapidpm-functional-reactive.version}</version>
-        </dependency>
-        <!--https://github.com/functional-reactive/functional-vaadin-addons-->
-        <dependency>
-            <groupId>org.rapidpm</groupId>
-            <artifactId>rapidpm-functional-vaadin-addons</artifactId>
-            <version>${rapidpm-functional-vaadin-addons.version}</version>
-        </dependency>
+  <packaging>pom</packaging>
 
 
-        <!--RapidPM Microservice -->
-        <dependency>
-            <groupId>org.rapidpm.microservice</groupId>
-            <artifactId>rapidpm-microservice-modules-core</artifactId>
-        </dependency>
+  <inceptionYear>2017</inceptionYear>
+  <organization>
+    <name>Vaadin</name>
+    <url>http://www.vaadin.com</url>
+  </organization>
+  <url>VAADIN BLOG URL</url>
+  <name>Vaadin Testbench Jumpstart</name>
+  <description>An industrial style Jumpstart
+    to show how you could do TDD with a Vaadin Project
+  </description>
 
-        <dependency>
-            <groupId>org.rapidpm.microservice</groupId>
-            <artifactId>rapidpm-microservice-modules-optionals-metrics-health
-            </artifactId>
-        </dependency>
-        <!--RapidPM Microservice TDD -->
-        <dependency>
-            <groupId>org.rapidpm.microservice</groupId>
-            <artifactId>rapidpm-microservice-modules-core-testutils</artifactId>
-            <scope>test</scope>
-        </dependency>
+  <scm>
+    <url>https://github.com/Java-Publications/vaadin-002-testbench-jumpstart
+    </url>
+    <connection>
+      scm:git:https://github.com/Java-Publications/vaadin-002-testbenchs-jumpstart.git
+    </connection>
+    <developerConnection>
+      scm:git:https://github.com/Java-Publications/vaadin-002-testbench-jumpstart.git
+    </developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+  <developers>
+    <developer>
+      <name>Sven Ruppert</name>
+      <email>sven.ruppert@gmail.com</email>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+  </developers>
+  <issueManagement>
+    <system>Github</system>
+    <url>
+      https://github.com/Java-Publications/vaadin-002-testbench-jumpstart/issues
+    </url>
+  </issueManagement>
+  <!--<ciManagement>-->
+  <!--<system>TeamCity</system>-->
+  <!--<url>https://build.rapidpm.org/viewType.html?buildTypeId=RapidPM_Develop_ProxyBuilder_Snapshot</url>-->
+  <!--</ciManagement>-->
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+      <comments>A business-friendly OSS license</comments>
+    </license>
+  </licenses>
 
-
-        <!--global TDD-->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <!--Vaadin Testbench -->
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-java</artifactId>
-            <!--<version>3.3.1</version>-->
-            <version>3.0.1</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.detro</groupId>
-            <artifactId>ghostdriver</artifactId>
-            <scope>test</scope>
-            <version>2.0.0</version>
-        </dependency>
-
-        <!--global logging-->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>${log4j-api.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>${log4j-api.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-1.2-api</artifactId>
-            <version>${log4j-api.version}</version>
-        </dependency>
-    </dependencies>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <pitest-prod-classes>org.rapidpm.vaadin*</pitest-prod-classes>
+    <pitest-test-classes>junit.org.rapidpm.*</pitest-test-classes>
+  </properties>
 
 
-    <build>
-        <pluginManagement>
-            <plugins>
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>3.1.0</version>
+        </plugin>
+        <!--Docker -->
+        <plugin>
+          <groupId>io.fabric8</groupId>
+          <artifactId>docker-maven-plugin</artifactId>
+          <version>0.22.1</version>
+        </plugin>
 
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-release-plugin</artifactId>
-                    <version>2.5.3</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.6.1</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.0.2</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-war-plugin</artifactId>
-                    <version>3.0.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>3.0.1</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.0.2</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.0.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.19.1</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>${jacoco.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-repository-plugin</artifactId>
-                    <version>2.4</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jxr-plugin</artifactId>
-                    <version>2.5</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-gpg-plugin</artifactId>
-                    <version>1.6</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.10.4</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>2.17</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>1.4.1</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jdeps-plugin</artifactId>
-                    <version>3.0.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-shade-plugin</artifactId>
-                    <version>3.0.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>3.0.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>versions-maven-plugin</artifactId>
-                    <version>2.3</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.pitest</groupId>
-                    <artifactId>pitest-maven</artifactId>
-                    <version>1.2.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>net.alchim31.maven</groupId>
-                    <artifactId>scala-maven-plugin</artifactId>
-                    <version>3.2.2</version>
-                </plugin>
-                <plugin>
-                    <groupId>io.gatling</groupId>
-                    <artifactId>gatling-maven-plugin</artifactId>
-                    <version>2.2.4</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.sonarsource.scanner.maven</groupId>
-                    <artifactId>sonar-maven-plugin</artifactId>
-                    <version>3.3.0.603</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>exec-maven-plugin</artifactId>
-                    <version>1.6.0</version>
-                </plugin>
+        <plugin>
+          <groupId>com.github.webdriverextensions</groupId>
+          <artifactId>webdriverextensions-maven-plugin</artifactId>
+          <version>3.1.3-SNAPSHOT</version>
+        </plugin>
+        <plugin>
+          <groupId>com.vaadin</groupId>
+          <artifactId>vaadin-maven-plugin</artifactId>
+          <version>8.1.5</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
 
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>2.19.1</version>
-                </plugin>
-                <!--Vaadin Widget external -->
-                <plugin>
-                    <groupId>com.vaadin</groupId>
-                    <artifactId>vaadin-maven-plugin</artifactId>
-                    <version>${vaadin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>findbugs-maven-plugin</artifactId>
-                    <version>3.0.4</version>
-                </plugin>
-                <!--Docker -->
-                <plugin>
-                    <groupId>io.fabric8</groupId>
-                    <artifactId>docker-maven-plugin</artifactId>
-                    <version>0.20.1</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+
+    <plugins>
+
+      <plugin>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <includes>
+            <include>**/org/rapidpm/**/</include>
+            <!--<include>**/bdd/*.java</include>-->
+          </includes>
+          <!-- So that the browser correctly gains focus on Mac
+              OS X -->
+          <systemProperties>
+            <property>
+              <name>java.awt.headless</name>
+              <value>true</value>
+            </property>
+          </systemProperties>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+
+
+
+  <profiles>
+
+    <profile>
+      <id>qm-qs-pitest</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
         <plugins>
-            <plugin>
-                <groupId>com.vaadin</groupId>
-                <artifactId>vaadin-maven-plugin</artifactId>
-                <configuration>
-                    <extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
-                    <webappDirectory>
-                        ${basedir}/target/classes/VAADIN/widgetsets
-                    </webappDirectory>
-                    <draftCompile>false</draftCompile>
-                    <compileReport>false</compileReport>
-                    <style>OBF</style>
-                    <strict>true</strict>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>update-theme</goal>
-                            <!-- Comment out compile-theme goal to use on-the-fly theme compilation -->
-                            <goal>compile-theme</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.17</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <includes>
-                        <include>**/org/rapidpm/**/</include>
-                        <!--<include>**/bdd/*.java</include>-->
-                    </includes>
-                    <!-- So that the browser correctly gains focus on Mac
-                        OS X -->
-                    <systemProperties>
-                        <property>
-                            <name>java.awt.headless</name>
-                            <value>true</value>
-                        </property>
-                    </systemProperties>
-                </configuration>
-            </plugin>
+          <!--Enable mutation testing-->
+          <plugin>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-maven</artifactId>
+            <configuration>
+              <threads>2</threads>
+              <outputFormats>
+                <outputFormat>XML</outputFormat>
+                <outputFormat>HTML</outputFormat>
+              </outputFormats>
+              <targetClasses>
+                <param>${pitest-prod-classes}</param>
+              </targetClasses>
+              <targetTests>
+                <param>${pitest-test-classes}</param>
+              </targetTests>
+            </configuration>
+          </plugin>
         </plugins>
-    </build>
-
-    <repositories>
-        <repository>
-            <id>snapshots-repo</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-    </repositories>
-
-    <profiles>
-        <profile>
-            <id>java-jdk-8</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <configuration>
-                            <source>1.8</source>
-                            <target>1.8</target>
-                            <showDeprecation>true</showDeprecation>
-                            <showWarnings>false</showWarnings>
-                            <optimize>true</optimize>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-
-        <profile>
-            <id>repo-allow-vaadin</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <repositories>
-                <repository>
-                    <id>vaadin-addons</id>
-                    <url>http://maven.vaadin.com/vaadin-addons</url>
-                    <!--<url>http://maven.vaadin.com/</url>-->
-                </repository>
-                <repository>
-                    <id>vaadin-prereleases</id>
-                    <name>Vaadin Pre-releases</name>
-                    <url>https://maven.vaadin.com/vaadin-prereleases</url>
-                </repository>
-                <repository>
-                    <id>vaadin-snapshots</id>
-                    <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
-                    <releases>
-                        <enabled>false</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>true</enabled>
-                    </snapshots>
-                </repository>
-            </repositories>
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>vaadin-prereleases</id>
-                    <name>Vaadin Pre-releases</name>
-                    <url>https://maven.vaadin.com/vaadin-prereleases</url>
-                </pluginRepository>
-                <pluginRepository>
-                    <id>vaadin-snapshots</id>
-                    <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
-                    <releases>
-                        <enabled>false</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>true</enabled>
-                    </snapshots>
-                </pluginRepository>
-            </pluginRepositories>
-        </profile>
-        <!--Testbench stuff-->
-        <profile>
-            <id>repo-allow-jitpack</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <repositories>
-                <repository>
-                    <id>jitpack.io</id>
-                    <url>https://jitpack.io</url>
-                </repository>
-            </repositories>
-        </profile>
-
-    </profiles>
-
+      </build>
+      <reporting>
+        <plugins>
+          <plugin>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-maven</artifactId>
+            <reportSets>
+              <reportSet>
+                <reports>
+                  <report>report</report>
+                </reports>
+              </reportSet>
+            </reportSets>
+          </plugin>
+        </plugins>
+      </reporting>
+    </profile>
+  </profiles>
 </project>

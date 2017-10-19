@@ -8,157 +8,93 @@ import java.time.LocalDate;
  * application this could for example be a JPA entity.
  */
 @SuppressWarnings("serial")
-public class Customer implements Serializable /*, Cloneable */{
+public class Customer implements Serializable {
 
-	private Long id;
+  private Long id;
+  private String firstName = "";
+  private String lastName = "";
+  private LocalDate birthDate;
+  private CustomerStatus status;
+  private String email = "";
 
-	private String firstName = "";
+  public boolean isPersisted() {
+    return id != null;
+  }
 
-	private String lastName = "";
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (this.id == null) {
+      return false;
+    }
 
-	private LocalDate birthDate;
+    if (obj instanceof Customer && obj.getClass().equals(getClass())) {
+      return this.id.equals(((Customer) obj).id);
+    }
 
-	private CustomerStatus status;
+    return false;
+  }
 
-	private String email = "";
+  @Override
+  public int hashCode() {
+    int hash = 5;
+    hash = 43 * hash + (id == null ? 0 : id.hashCode());
+    return hash;
+  }
 
-	public Long getId() {
-		return id;
-	}
+  @Override
+  public String toString() {
+    return firstName + " " + lastName;
+  }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
 
-	/**
-	 * Get the value of email
-	 *
-	 * @return the value of email
-	 */
-	public String getEmail() {
-		return email;
-	}
+  public Long getId() {
+    return id;
+  }
 
-	/**
-	 * Set the value of email
-	 *
-	 * @param email
-	 *            new value of email
-	 */
-	public void setEmail(String email) {
-		this.email = email;
-	}
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-	/**
-	 * Get the value of status
-	 *
-	 * @return the value of status
-	 */
-	public CustomerStatus getStatus() {
-		return status;
-	}
+  public String getFirstName() {
+    return firstName;
+  }
 
-	/**
-	 * Set the value of status
-	 *
-	 * @param status
-	 *            new value of status
-	 */
-	public void setStatus(CustomerStatus status) {
-		this.status = status;
-	}
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
 
-	/**
-	 * Get the value of birthDate
-	 *
-	 * @return the value of birthDate
-	 */
-	public LocalDate getBirthDate() {
-		return birthDate;
-	}
+  public String getLastName() {
+    return lastName;
+  }
 
-	/**
-	 * Set the value of birthDate
-	 *
-	 * @param birthDate
-	 *            new value of birthDate
-	 */
-	public void setBirthDate(LocalDate birthDate) {
-		this.birthDate = birthDate;
-	}
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
 
-	/**
-	 * Get the value of lastName
-	 *
-	 * @return the value of lastName
-	 */
-	public String getLastName() {
-		return lastName;
-	}
+  public LocalDate getBirthDate() {
+    return birthDate;
+  }
 
-	/**
-	 * Set the value of lastName
-	 *
-	 * @param lastName
-	 *            new value of lastName
-	 */
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+  public void setBirthDate(LocalDate birthDate) {
+    this.birthDate = birthDate;
+  }
 
-	/**
-	 * Get the value of firstName
-	 *
-	 * @return the value of firstName
-	 */
-	public String getFirstName() {
-		return firstName;
-	}
+  public CustomerStatus getStatus() {
+    return status;
+  }
 
-	/**
-	 * Set the value of firstName
-	 *
-	 * @param firstName
-	 *            new value of firstName
-	 */
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+  public void setStatus(CustomerStatus status) {
+    this.status = status;
+  }
 
-	public boolean isPersisted() {
-		return id != null;
-	}
+  public String getEmail() {
+    return email;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (this.id == null) {
-			return false;
-		}
-
-		if (obj instanceof Customer && obj.getClass().equals(getClass())) {
-			return this.id.equals(((Customer) obj).id);
-		}
-
-		return false;
-	}
-
-	@Override
-	public int hashCode() {
-		int hash = 5;
-		hash = 43 * hash + (id == null ? 0 : id.hashCode());
-		return hash;
-	}
-
-//	@Override
-//	public Customer clone() throws CloneNotSupportedException {
-//		return (Customer) super.clone();
-//	}
-
-	@Override
-	public String toString() {
-		return firstName + " " + lastName;
-	}
+  public void setEmail(String email) {
+    this.email = email;
+  }
 }

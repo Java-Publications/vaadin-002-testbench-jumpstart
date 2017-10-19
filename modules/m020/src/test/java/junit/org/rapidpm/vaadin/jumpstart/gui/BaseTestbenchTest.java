@@ -111,7 +111,7 @@ public class BaseTestbenchTest extends TestBenchTestCase {
         Main.deploy();
         ((CheckedExecutor) this::setUpTestbench)
             .execute()
-            .bind(
+            .ifPresentOrElse(
                 sucess -> {
                     LOGGER.info("test is ready to runn..");
                     saveScreenshot("001_before");
@@ -191,9 +191,9 @@ public class BaseTestbenchTest extends TestBenchTestCase {
             fileOutputStream.close();
         })
             .execute()
-            .bind(
+            .ifPresentOrElse(
                 success -> LOGGER.info("file sucessfull writen " + file.getAbsolutePath()),
-                LOGGER::warn);
+                failed -> LOGGER.warn(failed));
     };
 
     protected void saveScreenshot(String name) {
@@ -209,12 +209,15 @@ public class BaseTestbenchTest extends TestBenchTestCase {
                                   () -> success(((RemoteWebDriver) driver).getScreenshotAs(OutputType.BYTES))),
                         matchCase(() -> driver instanceof TestBenchDriverProxy,
                                   () -> takeScreenshot.apply((TestBenchDriverProxy) driver)))
-                        .bind((bytes) -> fileWriter.accept(fileName, bytes), LOGGER::warn);
+                        .ifPresentOrElse(
+                            (bytes) -> fileWriter.accept(fileName, bytes),
+                            failed -> LOGGER.warn(failed));
                     return null;
                 };
                 execute.apply(webDriver)
-                       .bind(aVoid -> LOGGER.info("saveScreenshot was ok " + fileName),
-                             LOGGER::warn);
+                       .ifPresentOrElse(
+                           aVoid -> LOGGER.info("saveScreenshot was ok " + fileName),
+                           failed -> LOGGER.warn(failed));
 
             });
     }

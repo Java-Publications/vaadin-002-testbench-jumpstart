@@ -84,7 +84,7 @@ public class LoginScreenCustom extends LoginScreen {
                     matchCase(password::isEmpty, () -> failure(resolve("login.failed.description.empty.password"))),
                     matchCase(() -> !loginService.isLoginAllowed(username, password),
                               () -> failure(resolve("login.failed.description"))));
-            match.bind(
+            match.ifPresentOrElse(
                 validateUser -> {
                     getSession().setAttribute(User.class, validateUser);
                     UI.getCurrent()

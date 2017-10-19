@@ -7,12 +7,15 @@ import static org.rapidpm.vaadin.testbench.addon.MicroserviceTestUtils.setUpMicr
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.rapidpm.ddi.DI;
 import org.rapidpm.frp.functions.CheckedExecutor;
 import org.rapidpm.microservice.Main;
-
+import com.automation.remarks.junit.VideoRule;
+import com.automation.remarks.video.annotations.Video;
 import com.vaadin.testbench.TestBenchTestCase;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.FormLayoutElement;
@@ -21,137 +24,143 @@ import com.vaadin.testbench.elements.TextFieldElement;
 
 public class AddressBookTest extends TestBenchTestCase {
 
-    @Before
-    public void setUp()
-        throws Exception {
-        initSystemProperties();
-        setUpMicroserviceProperties();
 
-        DI.clearReflectionModel();
-        DI.activatePackages("org.rapidpm");
-        DI.activatePackages("my.vaadin");
-        DI.activatePackages(this.getClass());
-        DI.activateDI(this);
-        Main.deploy();
-        //        ((CheckedExecutor) this::setUpTestbench)
-        //            .execute()
-        //            .bind(
-        //                sucess -> LOGGER.info("test is ready to runn.."),
-        //                failed -> LOGGER.warn("setting up Testbench faild for !! "
-        //                                      + dataConfig.getT1().get() + " - "
-        //                                      + dataConfig.getT2().get() + " - "
-        //                                      + dataConfig.getT3().get() + " - "
-        //                                      + dataConfig.getT4().get()
-        //                )
-        //            );
+  @Rule
+  public VideoRule videoRule = new VideoRule();
 
-        setDriver(new ChromeDriver());
-        //        setDriver(new PhantomJSDriver());¶
-    }
+  @Before
+  public void setUp()
+      throws Exception {
+    initSystemProperties();
+    setUpMicroserviceProperties();
 
-    @After
-    public void tearDown()
-        throws Exception {
-        ((CheckedExecutor) () -> getDriver().quit()).execute();
-        ((CheckedExecutor) Main::stop).execute();
-        ((CheckedExecutor) DI::clearReflectionModel).execute();
+    DI.clearReflectionModel();
+    DI.activatePackages("org.rapidpm");
+    DI.activatePackages("my.vaadin");
+    DI.activatePackages(this.getClass());
+    DI.activateDI(this);
+    Main.deploy();
+    //        ((CheckedExecutor) this::setUpTestbench)
+    //            .execute()
+    //            .bind(
+    //                sucess -> LOGGER.info("test is ready to runn.."),
+    //                failed -> LOGGER.warn("setting up Testbench faild for !! "
+    //                                      + dataConfig.getT1().get() + " - "
+    //                                      + dataConfig.getT2().get() + " - "
+    //                                      + dataConfig.getT3().get() + " - "
+    //                                      + dataConfig.getT4().get()
+    //                )
+    //            );
 
-    }
+    setDriver(new ChromeDriver());
+    //        setDriver(new PhantomJSDriver());¶
+    getDriver().manage().window().setSize(new Dimension(1440, 900));
+  }
 
-    @Test
-    public void testAddressBook() {
-        getDriver().get(baseURL.get());
-        Assert.assertTrue($(GridElement.class).exists());
-    }
+  @After
+  public void tearDown()
+      throws Exception {
+    ((CheckedExecutor) () -> getDriver().quit()).execute();
+    ((CheckedExecutor) Main::stop).execute();
+    ((CheckedExecutor) DI::clearReflectionModel).execute();
 
-    @Test
-    public void testFormShowsCorrectData() {
-        getDriver().get(baseURL.get());
+  }
 
-        // 1. Find the Table
-        GridElement table = $(GridElement.class).first();
+  @Test
+  public void testAddressBook() {
+    getDriver().get(baseURL.get());
+    Assert.assertTrue($(GridElement.class).exists());
+  }
 
-        // 2. Store the first name and last name values shown
-        // in the first row of the table for later comparison
-        String firstName = table.getCell(0, 0).getText();
-        String lastName = table.getCell(0, 1).getText();
+  @Test
+  @Video
+  public void testFormShowsCorrectData() {
+    getDriver().get(baseURL.get());
 
-        // 3. Click on the first row
-        table.getCell(0, 0).click();
+    // 1. Find the Table
+    GridElement table = $(GridElement.class).first();
 
-        // 4. Assert that the values in the first name and
-        // last name fields are the same as in the table
-        Assert.assertEquals(firstName, $(FormLayoutElement.class).$(TextFieldElement.class).first().getValue());
-        Assert.assertEquals(lastName, $(FormLayoutElement.class).$(TextFieldElement.class).get(1).getValue());
-    }
+    // 2. Store the first name and last name values shown
+    // in the first row of the table for later comparison
+    String firstName = table.getCell(0 , 0).getText();
+    String lastName = table.getCell(0 , 1).getText();
 
-    @Test
-    public void testEnterNew() {
-        getDriver().get(baseURL.get());
+    // 3. Click on the first row
+    table.getCell(0 , 0).click();
 
-        // 1. Click the "New contact" button
-        $(ButtonElement.class).caption("Add new customer").first().click();
+    // 4. Assert that the values in the first name and
+    // last name fields are the same as in the table
+    Assert.assertEquals(firstName , $(FormLayoutElement.class).$(TextFieldElement.class).first().getValue());
+    Assert.assertEquals(lastName , $(FormLayoutElement.class).$(TextFieldElement.class).get(1).getValue());
+  }
 
-        // 2. Enter "Tyler" into the first name field
-        $(FormLayoutElement.class).$(TextFieldElement.class).
-            first().setValue("Tyler");
+  @Test
+  public void testEnterNew() {
+    getDriver().get(baseURL.get());
 
-        // 3. Enter "Durden" into the last name field
-        $(FormLayoutElement.class).$(TextFieldElement.class).
-            get(1).setValue("Durden");
+    // 1. Click the "New contact" button
+    $(ButtonElement.class).caption("Add new customer").first().click();
 
-        // 4. Save the new contact by clicking "Save" button
-        $(ButtonElement.class).caption("Save").first().click();
+    // 2. Enter "Tyler" into the first name field
+    $(FormLayoutElement.class).$(TextFieldElement.class).
+        first().setValue("Tyler");
 
-        // 5. Click on some other row
-        GridElement table = $(GridElement.class).first();
-        table.getCell(6, 0).click();
+    // 3. Enter "Durden" into the last name field
+    $(FormLayoutElement.class).$(TextFieldElement.class).
+        get(1).setValue("Durden");
 
-        // 6. Assert that the entered name is not in the text
-        // fields any longer
-        Assert.assertNotEquals("Tyler", $(FormLayoutElement.class).
-                                                                      $(TextFieldElement.class).first().getValue());
-        Assert.assertNotEquals("Durden", $(FormLayoutElement.class).
-                                                                       $(TextFieldElement.class).get(1).getValue());
+    // 4. Save the new contact by clicking "Save" button
+    $(ButtonElement.class).caption("Save").first().click();
 
-        // 7. Click on the first row
-        table.getCell(0, 0).click();
+    // 5. Click on some other row
+    GridElement table = $(GridElement.class).first();
+    table.getCell(6 , 0).click();
 
-        // 8. Verify that the first row and form
-        // contain "Tyler Durden"
-        Assert.assertEquals("Tyler", table.getCell(0, 0).getText());
-        Assert.assertEquals("Durden", table.getCell(0, 1).getText());
-        Assert.assertEquals("Tyler", $(FormLayoutElement.class).
+    // 6. Assert that the entered name is not in the text
+    // fields any longer
+    Assert.assertNotEquals("Tyler" , $(FormLayoutElement.class).
                                                                    $(TextFieldElement.class).first().getValue());
-        Assert.assertEquals("Durden", $(FormLayoutElement.class).
+    Assert.assertNotEquals("Durden" , $(FormLayoutElement.class).
                                                                     $(TextFieldElement.class).get(1).getValue());
-    }
 
-    @Test
-    public void testEnterNewPageObjects() {
-        getDriver().get(baseURL.get());
+    // 7. Click on the first row
+    table.getCell(0 , 0).click();
 
-        AddressBook addressBook = new AddressBook(getDriver());
+    // 8. Verify that the first row and form
+    // contain "Tyler Durden"
+    Assert.assertEquals("Tyler" , table.getCell(0 , 0).getText());
+    Assert.assertEquals("Durden" , table.getCell(0 , 1).getText());
+    Assert.assertEquals("Tyler" , $(FormLayoutElement.class).
+                                                                $(TextFieldElement.class).first().getValue());
+    Assert.assertEquals("Durden" , $(FormLayoutElement.class).
+                                                                 $(TextFieldElement.class).get(1).getValue());
+  }
 
-        EntryForm form = addressBook.createNewEntry();
-        form.setFirstName("Tyler");
-        form.setLastName("Durden");
-        form.saveEntry();
+  @Test
+  public void testEnterNewPageObjects() {
+    getDriver().get(baseURL.get());
 
-        // Select some other entry
-        form = addressBook.selectEntryAtIndex(6);
+    AddressBook addressBook = new AddressBook(getDriver());
 
-        // Assert that the entered name is not in the
-        // text fields any longer
-        Assert.assertNotEquals("Tyler", form.getFirstName());
-        Assert.assertNotEquals("Durden", form.getLastName());
+    EntryForm form = addressBook.createNewEntry();
+    form.setFirstName("Tyler");
+    form.setLastName("Durden");
+    form.saveEntry();
 
-        // Verify that the first row and form contain
-        // "Tyler Durden"
-        form = addressBook.selectEntryAtIndex(0);
-        Assert.assertEquals("Tyler", addressBook.getFirstNameAtIndex(0));
-        Assert.assertEquals("Durden", addressBook.getLastNameAtIndex(0));
-        Assert.assertEquals("Tyler", form.getFirstName());
-        Assert.assertEquals("Durden", form.getLastName());
-    }
+    // Select some other entry
+    form = addressBook.selectEntryAtIndex(6);
+
+    // Assert that the entered name is not in the
+    // text fields any longer
+    Assert.assertNotEquals("Tyler" , form.getFirstName());
+    Assert.assertNotEquals("Durden" , form.getLastName());
+
+    // Verify that the first row and form contain
+    // "Tyler Durden"
+    form = addressBook.selectEntryAtIndex(0);
+    Assert.assertEquals("Tyler" , addressBook.getFirstNameAtIndex(0));
+    Assert.assertEquals("Durden" , addressBook.getLastNameAtIndex(0));
+    Assert.assertEquals("Tyler" , form.getFirstName());
+    Assert.assertEquals("Durden" , form.getLastName());
+  }
 }

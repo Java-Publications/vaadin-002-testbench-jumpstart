@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Optional;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -97,7 +98,7 @@ public class TestBase extends TestBenchTestCase {
         Main.deploy();
         ((CheckedExecutor) this::setUpTestbench)
             .execute()
-            .bind(
+            .ifPresentOrElse(
                 sucess -> {
                     LOGGER.info("test is ready to run..");
                     // Create a new Selenium driver - it is automatically extended to work
@@ -189,12 +190,15 @@ public class TestBase extends TestBenchTestCase {
                                   () -> success(((RemoteWebDriver) driver).getScreenshotAs(OutputType.BYTES))),
                         matchCase(() -> driver instanceof TestBenchDriverProxy,
                                   () -> takeScreenshot.apply((TestBenchDriverProxy) driver)))
-                        .bind((bytes) -> fileWriter.accept(fileName, bytes), LOGGER::warn);
+                        .ifPresentOrElse(
+                            (bytes) -> fileWriter.accept(fileName, bytes),
+                            (Consumer<String>) LOGGER::warn);
                     return null;
                 };
                 execute.apply(webDriver)
-                       .bind(aVoid -> LOGGER.info("saveScreenshot was ok " + fileName),
-                             LOGGER::warn);
+                       .ifPresentOrElse(
+                           aVoid -> LOGGER.info("saveScreenshot was ok " + fileName),
+                           (Consumer<String>) LOGGER::warn);
 
             });
     }
@@ -217,9 +221,9 @@ public class TestBase extends TestBenchTestCase {
             fileOutputStream.close();
         })
             .execute()
-            .bind(
+            . ifPresentOrElse(
                 success -> LOGGER.info("file sucessfull writen " + file.getAbsolutePath()),
-                LOGGER::warn);
+                (Consumer<String>) LOGGER::warn);
     };
 
 }
