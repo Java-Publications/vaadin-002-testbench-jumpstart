@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>testbench-jumpstart-modules-m003</artifactId>
+    <groupId>org.rapidpm.vaadin</groupId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>testbench-jumpstart-modules-m003-srv</artifactId>
+
+
+  <dependencies>
+    <dependency>
+      <groupId>org.rapidpm.vaadin</groupId>
+      <artifactId>testbench-jumpstart-modules-m003-shared</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.rapidpm.microservice</groupId>
+      <artifactId>rapidpm-microservice-modules-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!--RapidPM Microservice -->
+    <dependency>
+      <groupId>org.rapidpm.microservice</groupId>
+      <artifactId>rapidpm-microservice-modules-optionals-metrics-health</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!--RapidPM Microservice TDD -->
+    <dependency>
+      <groupId>org.rapidpm.microservice</groupId>
+      <artifactId>rapidpm-microservice-modules-core-testutils</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+
+
+
+
+  </dependencies>
+  <profiles>
+    <profile>
+      <id>qm-qs-pitest</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <!--Enable mutation testing-->
+          <plugin>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-maven</artifactId>
+            <configuration>
+              <outputFormats>
+                <outputFormat>XML</outputFormat>
+                <outputFormat>HTML</outputFormat>
+              </outputFormats>
+              <targetClasses>
+                <param>org.rapidpm.vaadin.srv*</param>
+              </targetClasses>
+              <targetTests>
+                <param>junit.org.rapidpm.*</param>
+              </targetTests>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+      <reporting>
+        <plugins>
+          <plugin>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-maven</artifactId>
+            <reportSets>
+              <reportSet>
+                <reports>
+                  <report>report</report>
+                </reports>
+              </reportSet>
+            </reportSets>
+          </plugin>
+        </plugins>
+      </reporting>
+    </profile>
+  </profiles>
+</project>

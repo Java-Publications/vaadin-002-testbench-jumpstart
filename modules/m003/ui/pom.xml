@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>testbench-jumpstart-modules-m003</artifactId>
+    <groupId>org.rapidpm.vaadin</groupId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>testbench-jumpstart-modules-m003-ui</artifactId>
+
+  <!--Mutation Testing scope-->
+  <properties>
+    <pitest-prod-classes>org.rapidpm.vaadin.ui.app.*</pitest-prod-classes>
+    <pitest-test-classes>junit.org.rapidpm.*</pitest-test-classes>
+  </properties>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>org.rapidpm.vaadin</groupId>
+      <artifactId>testbench-jumpstart-modules-m003-shared</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.rapidpm.vaadin</groupId>
+      <artifactId>testbench-jumpstart-modules-m003-srv</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.rapidpm.vaadin</groupId>
+      <artifactId>testbench-jumpstart-modules-m003-ui-components</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.rapidpm.microservice</groupId>
+      <artifactId>rapidpm-microservice-modules-core</artifactId>
+    </dependency>
+    <!--RapidPM Microservice -->
+    <dependency>
+      <groupId>org.rapidpm.microservice</groupId>
+      <artifactId>rapidpm-microservice-modules-optionals-metrics-health</artifactId>
+    </dependency>
+    <!--RapidPM Microservice TDD -->
+    <dependency>
+      <groupId>org.rapidpm.microservice</groupId>
+      <artifactId>rapidpm-microservice-modules-core-testutils</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin-testbench</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-java</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+
+
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.github.webdriverextensions</groupId>
+        <artifactId>webdriverextensions-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>install-drivers</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <keepDownloadedWebdrivers>true</keepDownloadedWebdrivers>
+          <!--Distributed FS-->
+          <!--<installationDirectory>/Users/andidev/drivers</installationDirectory>-->
+          <installationDirectory>_data/webdrivers</installationDirectory>
+          <drivers>
+            <driver>
+              <name>safari</name>
+            </driver>
+            <driver>
+              <name>chromedriver</name>
+            </driver>
+            <driver>
+              <name>operadriver</name>
+            </driver>
+            <driver>
+              <name>geckodriver</name>
+            </driver>
+            <driver>
+              <name>phantomjs</name>
+            </driver>
+          </drivers>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
