@@ -16,5 +16,23 @@
     <module>ui</module>
   </modules>
 
+<dependencies>
+  <dependency>
+    <groupId>org.rapidpm.microservice</groupId>
+    <artifactId>rapidpm-microservice-modules-core</artifactId>
+  </dependency>
+  <!--RapidPM Microservice -->
+  <dependency>
+    <groupId>org.rapidpm.microservice</groupId>
+    <artifactId>rapidpm-microservice-modules-optionals-metrics-health
+    </artifactId>
+  </dependency>
+  <!--RapidPM Microservice TDD -->
+  <dependency>
+    <groupId>org.rapidpm.microservice</groupId>
+    <artifactId>rapidpm-microservice-modules-core-testutils</artifactId>
+    <scope>test</scope>
+  </dependency>
 
+</dependencies>
 </project>
