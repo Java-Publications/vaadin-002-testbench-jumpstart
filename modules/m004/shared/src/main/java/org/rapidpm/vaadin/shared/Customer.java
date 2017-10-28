@@ -2,44 +2,40 @@ package org.rapidpm.vaadin.shared;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  */
 @SuppressWarnings("serial")
 public class Customer implements Serializable, HasLogger {
 
-  private Long id;
+  private Long id = -1L;
   private String firstName = "";
   private String lastName = "";
-  private LocalDate birthDate;
+  private LocalDate birthDay;
   private CustomerStatus status;
   private String email = "";
 
   public boolean isPersisted() {
-    return id != null;
+    return id != -1L;
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (this.id == null) {
-      return false;
-    }
-
-    if (obj instanceof Customer && obj.getClass().equals(getClass())) {
-      return this.id.equals(((Customer) obj).id);
-    }
-
-    return false;
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (! (o instanceof Customer)) return false;
+    Customer customer = (Customer) o;
+    return Objects.equals(id , customer.id) &&
+           Objects.equals(firstName , customer.firstName) &&
+           Objects.equals(lastName , customer.lastName) &&
+           Objects.equals(birthDay , customer.birthDay) &&
+           status == customer.status &&
+           Objects.equals(email , customer.email);
   }
 
   @Override
   public int hashCode() {
-    int hash = 5;
-    hash = 43 * hash + (id == null ? 0 : id.hashCode());
-    return hash;
+    return Objects.hash(id , firstName , lastName , birthDay , status , email);
   }
 
   @Override
@@ -53,6 +49,7 @@ public class Customer implements Serializable, HasLogger {
   }
 
   public void setId(Long id) {
+    Objects.requireNonNull(id);
     this.id = id;
   }
 
@@ -72,12 +69,12 @@ public class Customer implements Serializable, HasLogger {
     this.lastName = lastName;
   }
 
-  public LocalDate getBirthDate() {
-    return birthDate;
+  public LocalDate getBirthDay() {
+    return birthDay;
   }
 
-  public void setBirthDate(LocalDate birthDate) {
-    this.birthDate = birthDate;
+  public void setBirthDay(LocalDate birthDate) {
+    this.birthDay = birthDate;
   }
 
   public CustomerStatus getStatus() {

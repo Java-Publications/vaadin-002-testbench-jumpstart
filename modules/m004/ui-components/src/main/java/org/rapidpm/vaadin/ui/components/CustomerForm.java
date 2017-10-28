@@ -1,14 +1,14 @@
 package org.rapidpm.vaadin.ui.components;
 
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.io.Serializable;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.rapidpm.vaadin.shared.Customer;
 import org.rapidpm.vaadin.shared.CustomerStatus;
 import org.rapidpm.vaadin.shared.HasLogger;
 import com.vaadin.data.Binder;
 import com.vaadin.event.ShortcutAction.KeyCode;
-import com.vaadin.shared.Registration;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.FormLayout;
@@ -23,7 +23,7 @@ public class CustomerForm extends FormLayout implements HasLogger {
   private final TextField lastName = new TextField("Last name");
   private final TextField email = new TextField("Email");
   private final NativeSelect<CustomerStatus> status = new NativeSelect<>("Status");
-  private final DateField birthdate = new DateField("Birthday");
+  private final DateField birthday = new DateField("Birthday");
   private final Button save = new Button("Save");
   private final Button delete = new Button("Delete");
 
@@ -31,15 +31,15 @@ public class CustomerForm extends FormLayout implements HasLogger {
 
   private Customer customer;
 
-  private final List<UpdateEvent> saveListeners = new CopyOnWriteArrayList<>();
-  private final List<UpdateEvent> deleteListeners = new CopyOnWriteArrayList<>();
+  private final Set<UpdateEvent> saveListeners = ConcurrentHashMap.newKeySet();
+  private final Set<UpdateEvent> deleteListeners = ConcurrentHashMap.newKeySet();
 
 
   public CustomerForm() {
 
     setSizeUndefined();
     HorizontalLayout buttons = new HorizontalLayout(save , delete);
-    addComponents(firstName , lastName , email , status , birthdate , buttons);
+    addComponents(firstName , lastName , email , status , birthday , buttons);
 
     status.setItems(CustomerStatus.values());
     save.setStyleName(ValoTheme.BUTTON_PRIMARY);
@@ -86,5 +86,9 @@ public class CustomerForm extends FormLayout implements HasLogger {
     public void update(Customer customer);
   }
 
+  @FunctionalInterface
+  public interface Registration extends Serializable {
+    boolean remove();
+  }
 
 }

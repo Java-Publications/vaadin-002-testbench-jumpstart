@@ -8,31 +8,31 @@ import com.vaadin.testbench.elements.TextFieldElement;
 
 public class EntryForm extends TestBenchTestCase {
 
-    public EntryForm(WebDriver driver) {
-        setDriver(driver);
-    }
+  public EntryForm(WebDriver driver) {
+    setDriver(driver);
+  }
 
-    public String getLastName() {
-        return $(FormLayoutElement.class).$(TextFieldElement.class).
-                get(1).getValue();
-    }
+  public String getLastName() {
+    return $(FormLayoutElement.class).$(TextFieldElement.class).
+        get(1).getValue();
+  }
 
-    public String getFirstName() {
-        return $(FormLayoutElement.class).$(TextFieldElement.class).
-                first().getValue();
-    }
+  public void setLastName(String lastName) {
+    $(FormLayoutElement.class).$(TextFieldElement.class).
+        get(1).setValue(lastName);
+  }
 
-    public void setLastName(String lastName) {
-        $(FormLayoutElement.class).$(TextFieldElement.class).
-                get(1).setValue(lastName);
-    }
+  public String getFirstName() {
+    return $(FormLayoutElement.class).$(TextFieldElement.class).
+        first().getValue();
+  }
 
-    public void setFirstName(String firstName) {
-        $(FormLayoutElement.class).$(TextFieldElement.class).
-                first().setValue(firstName);
-    }
+  public void setFirstName(String firstName) {
+    $(FormLayoutElement.class).$(TextFieldElement.class).
+        first().setValue(firstName);
+  }
 
-    public void saveEntry() {
-        $(ButtonElement.class).caption("Save").first().click();
-    }
+  public void saveEntry() {
+    $(ButtonElement.class).caption("Save").first().click();
+  }
 }

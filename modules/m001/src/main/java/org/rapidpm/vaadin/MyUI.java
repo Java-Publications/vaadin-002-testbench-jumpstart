@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.servlet.annotation.WebServlet;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
@@ -28,10 +27,10 @@ import com.vaadin.ui.themes.ValoTheme;
  */
 public class MyUI extends UI {
 
-  private CustomerService service = CustomerService.getInstance();
   private final Grid<Customer> grid = new Grid<>();
   private final TextField filterText = new TextField();
   private final CustomerForm form = new CustomerForm(this);
+  private CustomerService service = CustomerService.getInstance();
 
   @Override
   protected void init(VaadinRequest vaadinRequest) {

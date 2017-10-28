@@ -7,12 +7,12 @@ import javax.servlet.annotation.WebServlet;
 import org.rapidpm.frp.functions.CheckedExecutor;
 import org.rapidpm.vaadin.shared.Customer;
 import org.rapidpm.vaadin.srv.CustomerService;
+import org.rapidpm.vaadin.srv.CustomerServiceImpl;
 import org.rapidpm.vaadin.ui.components.CustomerForm;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
-import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
@@ -25,20 +25,28 @@ import com.vaadin.ui.themes.ValoTheme;
 
 public class MyUI extends UI {
 
-  private CustomerService service = CustomerService.getInstance();
+  public static final String FILTER_TF = "filterTF";
+  public static final String DATA_GRID = "dataGrid";
+  public static final String CLEAR_FILTER_BTN = "clearFilterBTN";
+  private CustomerService service = CustomerServiceImpl.getInstance();
   private final Grid<Customer> grid = new Grid<>();
   private final TextField filterText = new TextField();
+  private final Button clearFilterTextBtn = new Button(FontAwesome.TIMES);
   private final CustomerForm customerForm = new CustomerForm();
 
   @Override
   protected void init(VaadinRequest vaadinRequest) {
+
+    filterText.setId(FILTER_TF);
+    grid.setId(DATA_GRID);
+    clearFilterTextBtn.setId(CLEAR_FILTER_BTN);
+
     final VerticalLayout layout = new VerticalLayout();
 
     filterText.setPlaceholder("filter by name...");
     filterText.addValueChangeListener(e -> updateList());
     filterText.setValueChangeMode(ValueChangeMode.LAZY);
 
-    Button clearFilterTextBtn = new Button(FontAwesome.TIMES);
     clearFilterTextBtn.setDescription("Clear the current filter");
     clearFilterTextBtn.addClickListener(e -> filterText.clear());
 
@@ -90,8 +98,8 @@ public class MyUI extends UI {
     });
   }
 
-  private Registration deleteRegistration;
-  private Registration saveRegistration;
+  private CustomerForm.Registration deleteRegistration;
+  private CustomerForm.Registration saveRegistration;
 
   @Override
   public void detach() {

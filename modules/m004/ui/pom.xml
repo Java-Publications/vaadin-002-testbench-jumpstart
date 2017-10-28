@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <artifactId>testbench-jumpstart-modules-m004</artifactId>
@@ -14,7 +14,7 @@
   <!--Mutation Testing scope-->
   <properties>
     <pitest-prod-classes>org.rapidpm.vaadin.ui.app.*</pitest-prod-classes>
-    <pitest-test-classes>junit.org.rapidpm.*</pitest-test-classes>
+    <pitest-test-classes>junit.org.rapidpm.vaadin.ui.app.*</pitest-test-classes>
   </properties>
 
   <dependencies>
@@ -36,6 +36,15 @@
       <artifactId>testbench-jumpstart-modules-m004-ui-components</artifactId>
       <version>${project.version}</version>
     </dependency>
+
+    <!--two Servlets in classpath - not extracted right now-->
+    <!--<dependency>-->
+    <!--<groupId>org.rapidpm.vaadin</groupId>-->
+    <!--<artifactId>testbench-jumpstart-modules-m004-ui-components</artifactId>-->
+    <!--<type>test-jar</type>-->
+    <!--<version>${project.version}</version>-->
+    <!--<scope>test</scope>-->
+    <!--</dependency>-->
 
 
     <dependency>
@@ -65,8 +74,6 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
-
 
 
   <build>
